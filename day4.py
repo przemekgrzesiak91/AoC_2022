@@ -1,4 +1,6 @@
-with open('data/day4.txt', 'r') as f:
+day = '4'
+
+with open('data/day'+day+'.txt', 'r') as f:
     data = f.read().splitlines()
 
 overlaps = 0
@@ -14,5 +16,6 @@ for row in data:
     if a.intersection(b):
         overlaps2 += 1
 
-print(overlaps)
-print(overlaps2)
+print('˜”°•Day '+ day+'•°”˜')
+print('Part 1:', overlaps)
+print('Part 2:', overlaps2)
