@@ -1,10 +1,19 @@
 import string
+day = '3'
 
-with open('data/day3.txt', 'r') as f:
+with open('data/day'+day+'.txt', 'r') as f:
     data = f.read().splitlines()
 
 alphabet = list(string.ascii_lowercase) + list(string.ascii_uppercase)
 priority = list(range(1,53))
+
+def check(a,b,c=''):
+    if c != '':
+        letter = (list(set(a).intersection(b,c)))
+    else:
+        letter = (list(set(a).intersection(b)))
+
+    return dic[letter[0]]
 
 dic = {}
 for key in alphabet:
@@ -16,14 +25,12 @@ for key in alphabet:
 result = 0
 for row in data:
     n = int(len(row)/2)
-    a,b = row[0:n], row[n:]
-    letter = (list(set(a).intersection(b)))
-    result += dic[letter[0]]
+    result += check(row[0:n],row[n:])
 
-print(result)
 result2 = 0
 for i in range(0,len(data),3):
-    letter = list(set(data[i]).intersection(data[i+1]).intersection(data[i+2]))
-    result2 += dic[letter[0]]
+    result2 += check(data[i], data[i+1], data[i+2])
 
-print(result2)
+print('˜”°•Day '+ day+'•°”˜')
+print('Part 1:', result)
+print('Part 2:', result2)
