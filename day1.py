@@ -1,4 +1,6 @@
-with open('data\day1.txt','r') as f:
+day = '1'
+
+with open('data/day'+day+'.txt', 'r') as f:
     data = f.readlines()
 i = 0
 result = [0]
@@ -11,7 +13,9 @@ for line in data:
     else:
         result[i] += int(line.strip())
 
-print(max(result))
 result = sorted(result)[::-1]
 final = sum(result[0:3])
-print (final)
+
+print('˜”°•Day '+ day+'•°”˜')
+print('Part 1:', max(result))
+print('Part 2:', final)
