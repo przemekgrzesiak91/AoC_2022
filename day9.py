@@ -8,7 +8,6 @@ with open('data\day'+day+'.txt', 'r') as f:
 
 
 
-print(data)
 h = [0,0]
 t = [0,0]
 t_history = set()
@@ -48,7 +47,7 @@ for command in data:
     visual[:] = ''
 
     for j in range(1,int(value)+1):
-        print('>>>>>>>>>>>>>>>>>',command)
+        #print('>>>>>>>>>>>>>>>>>',command)
         for i in range(0,9):
             #Head moves
             if i==0:
@@ -56,28 +55,34 @@ for command in data:
                 elif dir == 'L': all[i][0] -= 1
                 elif dir == 'U': all[i][1] += 1
                 elif dir == 'D': all[i][1] -= 1
-            print(i, all[i], i + 1, all[i + 1])
+            #print(i, all[i], i + 1, all[i + 1])
 
             #Tail
             x = all[i][0]-all[i+1][0]
             y = all[i][1]-all[i+1][1]
-            if abs(x) >= 2:
-                all[i+1][0]= all[i+1][0] + x - 1
 
-                y = all[i+1][1]-all[i][1]
+            if abs(x) == 2:
+
+                if x > 0: all[i+1][0] = all[i][0] - 1
+                else: all[i+1][0] = all[i][0] + 1
+
                 if abs(y) == 1:
-                    all[i+1][1] = all[i][1]
+                    all[i + 1][1] = all[i][1]
                 elif abs(y) > 1:
-                    all[i + 1][1] = all[i][1] + y
+                    if y < 0: all[i + 1][1] = all[i][1] + 1
+                    else: all[i + 1][1] = all[i][1] - 1
 
-            elif abs(y) >= 2:
-                all[i+1][1] = all[i+1][1] + y - 1
+            elif abs(y) == 2:
 
-                x = all[i+1][0] - all[i][0]
+                if y > 0: all[i+1][1] = all[i][1] - 1
+                else: all[i+1][1] = all[i][1] + 1
+
                 if abs(x) == 1:
-                    all[i+1][0] = all[i][0]
+                    all[i + 1][0] = all[i][0]
                 elif abs(x) > 1:
-                    all[i + 1][0] = all[i][0] + x
+                    if x < 0: all[i + 1][0] = all[i][0] - 1
+                    else: all[i + 1][0] = all[i][0] + 1
+
 
             #print(h,'---',t, dir)
             if i==8:
@@ -91,7 +96,8 @@ for command in data:
 result = (len(t_history))
 
 result2 = (len(t_history2))
-print(sorted(t_history2))
+#print(sorted(t_history2))
+
 print('˜”°•Day '+ day+'•°”˜')
 print('Part 1:', result)
 print('Part 2:', result2)
