@@ -6,52 +6,42 @@ day = '7'
 with open('data\day'+day+'.txt', 'r') as f:
     data = f.read().splitlines()
 
-structure = {}
 
-current = '/'
+structure = {'/':0}
+path='/'
 
-for row in data:
-    row = row.split(' ')
-
-    if 'cd' in row:
-        dirname = row[-1]
-        if dirname == '..':
-            current = structure[current][1]
+for cmd in data:
+    if '$' in cmd:
+        if '/' in cmd:
+            path = '/'
+        elif 'ls' in cmd:
+            pass
+        elif '..' in cmd:
+            path = path[0:path.rfind('/')]
         else:
-            structure[dirname] = [[],current,[]]
-            current = dirname
+            dirname = cmd.split(' ')[2]
+            path = path+'/'+dirname
+            structure[path] = 0
+    elif 'dir' in cmd:
+        pass
+    else:
+        size = int(cmd.split(' ')[0])
 
-    if row[0] == 'dir':
-        structure[dirname][2].append(row[1])
-    if row[0].isnumeric():
-        structure[dirname][0].append(int(row[0]))
+        dir = path
+        for i in range(dir.count('/')):
+            structure[dir] += size
+            dir = dir[0:dir.rfind('/')]
 
-print(structure)
 
-totals = []
 
-def sum_files(dirname):
-    dirnames = [dirname]
-    total = 0
+result = sum([x for x in structure.values() if x <= 100000])
 
-    while dirnames != []:
+max_size = structure['/']
+to_delete =  30000000-(70000000 - max_size)
 
-        current = dirnames.pop(0)
-        total += sum(structure[current][0])
 
-        dirnames += structure[current][2]
-        print(dirnames)
-    return total
+result2 = min([x for x in structure.values() if x >= to_delete])
 
-sums = []
-
-for key, value in structure.items():
-    #print(key)
-    sums.append(sum_files(key))
-
-result = sum([x*1 for x in sums if x <= 100000])
-
-result2 = ''
 print('˜”°•Day '+ day+'•°”˜')
 print('Part 1:', result)
 print('Part 2:', result2)
