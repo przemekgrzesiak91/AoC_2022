@@ -29,7 +29,6 @@ move_x = abs(min_x)
 
 #check = 10 + move_y
 check = 2000000 + move_y
-print(max_x,min_x)
 look = np.array(['.']* abs(max_x+10-min_x))
 
 
@@ -59,33 +58,89 @@ for pair in pairs:
             if look[k] == '.':
                 look[k] = '#'
 
-
-
-
-    # diff2 = yd - yg + 1
-    #
-    # for i in range(diff2):
-    #     if i > diff2 / 2:
-    #         i = diff2 - i - 1
-    #
-    #     for k in range(xs - i, xs + i + 1):
-    #         if my_map[yg, k+move_x] == '.':
-    #             #print(yg+move_y, k+move_x)
-    #             my_map[yg, k+move_x] = '#'
-    #     yg += 1
-
-
-
-# for row in my_map:
-#     print(''.join(np.asarray(row[0])[0]))
-
-
-#print(look)
 result = look.tolist().count('#')
 
-if 'B' in look: print('ok')
+# PART 2
+import re
 
-result2 =''
+day = '15'
+
+with open('data\day'+day+'.txt', 'r') as f:
+    data = f.read().splitlines()
+
+pairs = []
+for row in data:
+    xs,ys,xb,yb = [int(x) for x in re.findall('-?\d+',row)]
+    diff = abs(ys - yb) + abs(xs - xb)
+
+    pairs.append([(xs,ys),(xb,yb)])
+
+
+points = set()
+lines = dict()
+
+def distance(A,B):
+    return abs(A[0] - B[0]) + abs(A[1] - B[1])
+
+def is_free(point: tuple[int, int], pairs) -> bool:
+    """Returns True if point is outside the exclusion range of every sensor in sensors"""
+    for pair in pairs:
+        if distance(pair[0],pair[1]) >= distance(pair[0],point):
+            return False
+    return True
+
+def find_lines(pairs):
+    for pair in pairs:
+        range = distance(pair[0],pair[1])
+
+        lineA = (True,  pair[0][1] - range - 1 - pair[0][0])
+        lineB = (False, pair[0][1] - range - 1 + pair[0][0])
+        lineC = (True,  pair[0][1] + range + 1 - pair[0][0])
+        lineD = (False, pair[0][1] + range + 1 + pair[0][0])
+
+        for line in [lineA,lineB,lineC,lineD]:
+            if line in lines:
+                lines[line] += 1
+            else:
+                lines[line] = 1
+    return lines
+
+def find_point(lines):
+
+    rising= []
+    descending= []
+
+    for line, n in lines.items():
+        if n > 1:
+            if line[0]:
+                descending.append(line[1])
+            else:
+                rising.append(line[1])
+
+    points = []
+
+    for rising_q in rising:
+        for descending_q in descending:
+
+            x = (rising_q - descending_q) // 2
+            y = x + descending_q
+            point = (x, y)
+            points.append(point)
+
+    for point in points:
+        if (
+            (0 <= point[1] <= search_area)
+            and (0 <= point[0] <= search_area)
+            and is_free(point, pairs)
+        ):
+            return point[0] * 4000000 + point[1]
+
+
+search_area = 4000000
+lines = find_lines(pairs)
+
+result2 = find_point(lines)
+
 
 print('˜”°•Day '+ day+'•°”˜')
 print('Part 1:', result)
