@@ -24,8 +24,6 @@ def create_dic(data):
             monkeys[num][4] = int(re.findall('\d+',row)[0])
     return monkeys
 
-
-
 def play(rounds,part):
     lcm_divs = lcm(*divs)
 
@@ -69,7 +67,6 @@ monkeys = create_dic(data)
 play(10000,2)
 num_of_inspections = []
 result2 = count(monkeys)
-
 
 print('˜”°•Day '+ day+'•°”˜')
 print('Part 1:', result)
